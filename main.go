@@ -31,12 +31,18 @@ func main() {
 	}
 
 	spreadsheetId := "1-m3sfTXGwoqsPrZcyJQnJ2FoClwpl67EyPwUtOmwtxo"
-	titleRange := "Sheet1!B1"
+	titleRange := "Typical"
 	resp, err := srv.Spreadsheets.Get(spreadsheetId).Ranges(titleRange).IncludeGridData(true).Do()
 	if err != nil {
 		log.Fatalf("Unable to retrieve data from sheet: %v", err)
 	}
-
-	fmt.Println("No data found.", resp)
+	if len(resp.Sheets) > 0 {
+		cellValue := resp.Sheets[0].Data[0].RowData[0].Values[0]
+		formattedValue := cellValue.FormattedValue
+		backgroundColor := cellValue.EffectiveFormat.BackgroundColor
+		fmt.Println("cellValue", formattedValue, backgroundColor)
+	} else {
+		fmt.Println("No data found.", resp)
+	}
 
 }
