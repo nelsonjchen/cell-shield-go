@@ -11,9 +11,9 @@ import (
 
 type ShieldsIoJson struct {
 	SchemaVersion int    `json:"schemaVersion"`
-	Label   string `json:"label"`
-	Message string `json:"message"`
-	Color   string `json:"color"`
+	Label         string `json:"label"`
+	Message       string `json:"message"`
+	Color         string `json:"color"`
 }
 
 func main() {
@@ -29,9 +29,9 @@ func main() {
 		if spreadSheetId == "" {
 			err := json.NewEncoder(w).Encode(ShieldsIoJson{
 				SchemaVersion: 1,
-				Label:   "Error",
-				Message: "spreadSheetId is missing!",
-				Color:   "red",
+				Label:         "Error",
+				Message:       "spreadSheetId is missing!",
+				Color:         "red",
 			})
 			if err != nil {
 				return
@@ -43,9 +43,9 @@ func main() {
 		if cellRange == "" {
 			err := json.NewEncoder(w).Encode(ShieldsIoJson{
 				SchemaVersion: 1,
-				Label:   "Error",
-				Message: "cellRange is missing!",
-				Color:   "red",
+				Label:         "Error",
+				Message:       "cellRange is missing!",
+				Color:         "red",
 			})
 			if err != nil {
 				return
@@ -55,34 +55,34 @@ func main() {
 		}
 		shieldLabel := r.URL.Query().Get("shieldLabel")
 
-		shieldInformation, err := shieldinformation.GrabShieldInformation(shieldLabel, spreadSheetId, cellRange)
-		if err != nil {
+		shieldInformation, shErr := shieldinformation.GrabShieldInformation(shieldLabel, spreadSheetId, cellRange)
+		if shErr != nil {
 			err := json.NewEncoder(w).Encode(ShieldsIoJson{
 				SchemaVersion: 1,
-				Label:   "Error",
-				Message: fmt.Sprintf("Unable to retrieve shield information | %s", err),
-				Color:   "red",
+				Label:         "Error",
+				Message:       fmt.Sprintf("Unable to retrieve shield information | %s", shErr),
+				Color:         "red",
 			})
 			if err != nil {
 				return
 			}
-			log.Println("Unable to retrieve shield information for", r.URL.RawQuery)
+			log.Println("Unable to retrieve shield information for", r.URL.RawQuery, shErr)
 			return
 		}
 
-		err = json.NewEncoder(w).Encode(ShieldsIoJson{
+		err := json.NewEncoder(w).Encode(ShieldsIoJson{
 			SchemaVersion: 1,
-			Label:   shieldInformation.ShieldLabel,
-			Message: shieldInformation.ShieldMessage,
-			Color:   shieldInformation.ColorHex,
+			Label:         shieldInformation.ShieldLabel,
+			Message:       shieldInformation.ShieldMessage,
+			Color:         shieldInformation.ColorHex,
 		})
 
 		if err != nil {
 			err := json.NewEncoder(w).Encode(ShieldsIoJson{
 				SchemaVersion: 1,
-				Label:   "Error",
-				Message: fmt.Sprintf("Unable to generate shield information | %s", err),
-				Color:   "red",
+				Label:         "Error",
+				Message:       fmt.Sprintf("Unable to generate shield information | %s", err),
+				Color:         "red",
 			})
 			if err != nil {
 				return
