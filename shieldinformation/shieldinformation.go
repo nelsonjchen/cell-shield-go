@@ -27,7 +27,10 @@ func GrabShieldInformation(shieldLabel string, spreadsheetId string, cellRange s
 	}
 	if len(resp.Sheets) == 0 {
 		return nil, errors.New("range specified but somehow no data was returned")
+	}
 
+	if len(resp.Sheets[0].Data[0].RowData) == 0 {
+		return nil, errors.New("no data in cell")
 	}
 
 	cellValue := resp.Sheets[0].Data[0].RowData[0].Values[0]
