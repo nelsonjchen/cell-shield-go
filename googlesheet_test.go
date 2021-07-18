@@ -14,14 +14,14 @@ func TestGrabShieldInformation(t *testing.T) {
 
 	fmt.Printf("%s", *shieldInfo)
 
-	if shieldInfo.ShieldTitle != "Value" {
-		t.Errorf("Shield Title is incorrect")
+	if shieldInfo.ShieldLabel != "Value" {
+		t.Errorf("Shield Label is incorrect: %s", shieldInfo.ShieldLabel)
 	}
-	if shieldInfo.FormattedValue != "9001" {
-		t.Errorf("Formatted Value is incorrect")
+	if shieldInfo.ShieldMessage != "9001" {
+		t.Errorf("Message is incorrect: %s", shieldInfo.ShieldMessage)
 	}
 	if shieldInfo.ColorHex != "93c47d" {
-		t.Errorf("ColorHex is incorrect")
+		t.Errorf("ColorHex is incorrect: %s", shieldInfo.ColorHex)
 	}
 }
 
@@ -34,14 +34,14 @@ func TestGrabShieldInformationWithTitle(t *testing.T) {
 
 	fmt.Printf("%s", *shieldInfo)
 
-	if shieldInfo.ShieldTitle != "Title" {
-		t.Errorf("Shield Title is incorrect")
+	if shieldInfo.ShieldLabel != "Title" {
+		t.Errorf("Shield Label is incorrect: %s", shieldInfo.ShieldLabel)
 	}
-	if shieldInfo.FormattedValue != "9001" {
-		t.Errorf("Formatted Value is incorrect")
+	if shieldInfo.ShieldMessage != "9001" {
+		t.Errorf("Message is incorrect: %s", shieldInfo.ShieldMessage)
 	}
 	if shieldInfo.ColorHex != "93c47d" {
-		t.Errorf("ColorHex is incorrect")
+		t.Errorf("ColorHex is incorrect: %s", shieldInfo.ColorHex)
 	}
 }
 
@@ -54,11 +54,11 @@ func TestGrabShieldInformationWithNoTitleButColonInValue(t *testing.T) {
 
 	fmt.Printf("%s", *shieldInfo)
 
-	if shieldInfo.ShieldTitle != "Money Count" {
-		t.Errorf("Shield Title is incorrect: %s", shieldInfo.ShieldTitle)
+	if shieldInfo.ShieldLabel != "Money Count" {
+		t.Errorf("Shield Label is incorrect: %s", shieldInfo.ShieldLabel)
 	}
-	if shieldInfo.FormattedValue != "9001" {
-		t.Errorf("Formatted Value is incorrect: %s", shieldInfo.FormattedValue)
+	if shieldInfo.ShieldMessage != "9001" {
+		t.Errorf("Message is incorrect: %s", shieldInfo.ShieldMessage)
 	}
 	if shieldInfo.ColorHex != "ffffff" {
 		t.Errorf("ColorHex is incorrect: %s", shieldInfo.ColorHex)

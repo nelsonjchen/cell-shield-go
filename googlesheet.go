@@ -9,12 +9,12 @@ import (
 )
 
 type ShieldInformation struct {
-	ShieldTitle    string
-	FormattedValue string
-	ColorHex       string
+	ShieldLabel   string
+	ShieldMessage string
+	ColorHex      string
 }
 
-func GrabShieldInformation(shieldTitle string, spreadsheetId string, cellRange string) (*ShieldInformation, error) {
+func GrabShieldInformation(shieldLabel string, spreadsheetId string, cellRange string) (*ShieldInformation, error) {
 	ctx := context.Background()
 
 	srv, err := sheets.NewService(ctx)
@@ -26,7 +26,7 @@ func GrabShieldInformation(shieldTitle string, spreadsheetId string, cellRange s
 		return nil, err
 	}
 	if len(resp.Sheets) == 0 {
-		return nil, errors.New("Range specified but somehow no data was returned")
+		return nil, errors.New("range specified but somehow no data was returned")
 
 	}
 
@@ -34,23 +34,23 @@ func GrabShieldInformation(shieldTitle string, spreadsheetId string, cellRange s
 	formattedValue := cellValue.FormattedValue
 	backgroundColor := cellValue.EffectiveFormat.BackgroundColor
 
-	if shieldTitle == "" {
-		titleAndValue := strings.Split(formattedValue, ":")
+	if shieldLabel == "" {
+		labelAndValue := strings.Split(formattedValue, ":")
 		// Trim Spaces after split
-		for i := range titleAndValue {
-			titleAndValue[i] = strings.TrimSpace(titleAndValue[i])
+		for i := range labelAndValue {
+			labelAndValue[i] = strings.TrimSpace(labelAndValue[i])
 		}
-		if len(titleAndValue) > 1 {
-			shieldTitle = titleAndValue[0]
-			formattedValue = titleAndValue[1]
+		if len(labelAndValue) > 1 {
+			shieldLabel = labelAndValue[0]
+			formattedValue = labelAndValue[1]
 		} else {
-			shieldTitle = "Value"
+			shieldLabel = "Value"
 		}
 	}
 
 	shieldInformation := ShieldInformation{
-		ShieldTitle:    shieldTitle,
-		FormattedValue: formattedValue,
+		ShieldLabel:   shieldLabel,
+		ShieldMessage: formattedValue,
 		ColorHex: fmt.Sprintf(
 			"%02x%02x%02x",
 			int(backgroundColor.Red*255),
