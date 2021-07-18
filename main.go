@@ -7,6 +7,7 @@ import (
 	"html"
 	"log"
 	"net/http"
+	"os"
 )
 
 type ShieldsIoJson struct {
@@ -91,6 +92,10 @@ func main() {
 		log.Println("Sent shield information for", r.URL.RawQuery)
 	})
 
-	log.Println("Beginning to Listen")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	log.Println("listening on port", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
