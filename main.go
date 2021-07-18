@@ -40,7 +40,10 @@ func main() {
 		cellValue := resp.Sheets[0].Data[0].RowData[0].Values[0]
 		formattedValue := cellValue.FormattedValue
 		backgroundColor := cellValue.EffectiveFormat.BackgroundColor
-		fmt.Println("cellValue", formattedValue, backgroundColor)
+		fmt.Println("cellValue", formattedValue)
+		fmt.Printf("%02x ", int(backgroundColor.Red*255))
+		fmt.Printf("%02x ", int(backgroundColor.Green*255))
+		fmt.Printf("%02x ", int(backgroundColor.Blue*255))
 	} else {
 		fmt.Println("No data found.", resp)
 	}
