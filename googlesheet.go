@@ -5,14 +5,16 @@ import (
 	"errors"
 	"fmt"
 	"google.golang.org/api/sheets/v4"
+	"strings"
 )
 
 type ShieldInformation struct {
+	ShieldTitle    string
 	FormattedValue string
 	ColorHex       string
 }
 
-func GrabShieldInformation(spreadsheetId string, cellRange string) (*ShieldInformation, error) {
+func GrabShieldInformation(shieldTitle string, spreadsheetId string, cellRange string) (*ShieldInformation, error) {
 	ctx := context.Background()
 
 	srv, err := sheets.NewService(ctx)
@@ -32,7 +34,22 @@ func GrabShieldInformation(spreadsheetId string, cellRange string) (*ShieldInfor
 	formattedValue := cellValue.FormattedValue
 	backgroundColor := cellValue.EffectiveFormat.BackgroundColor
 
+	if shieldTitle == "" {
+		titleAndValue := strings.Split(formattedValue, ":")
+		// Trim Spaces after split
+		for i := range titleAndValue {
+			titleAndValue[i] = strings.TrimSpace(titleAndValue[i])
+		}
+		if len(titleAndValue) > 1 {
+			shieldTitle = titleAndValue[0]
+			formattedValue = titleAndValue[1]
+		} else {
+			shieldTitle = "Value"
+		}
+	}
+
 	shieldInformation := ShieldInformation{
+		ShieldTitle:    shieldTitle,
 		FormattedValue: formattedValue,
 		ColorHex: fmt.Sprintf(
 			"%02x%02x%02x",
