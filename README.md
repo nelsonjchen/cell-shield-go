@@ -1,5 +1,20 @@
 # Cell Shield
 
-*From your online spreadsheet cell to a shield*
+*From a cell to a shield*
 
-Cell Shield is a service.
+Cell Shield is a service that allows backing a [shields.io][shio] shield with
+a Google Spreadsheet.
+
+## Usage
+
+Please visit https://cellshield.info.
+
+## Demos
+
+Put Demos Here
+
+## Possible Expansion Thoughts
+
+* Microsoft Excel Online
+
+[shio]: https://shields.io/
