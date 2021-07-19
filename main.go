@@ -54,9 +54,8 @@ func main() {
 			log.Println("cellRange missing from:", r.URL.RawQuery)
 			return
 		}
-		shieldLabel := r.URL.Query().Get("shieldLabel")
 
-		shieldInformation, shErr := shieldinformation.GrabShieldInformation(shieldLabel, spreadSheetId, cellRange)
+		shieldInformation, shErr := shieldinformation.GrabShieldInformation(spreadSheetId, cellRange)
 		if shErr != nil {
 			err := json.NewEncoder(w).Encode(ShieldsIoJson{
 				SchemaVersion: 1,

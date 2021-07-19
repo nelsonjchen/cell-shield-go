@@ -14,7 +14,7 @@ type ShieldInformation struct {
 	ColorHex      string
 }
 
-func GrabShieldInformation(shieldLabel string, spreadsheetId string, cellRange string) (*ShieldInformation, error) {
+func GrabShieldInformation(spreadsheetId string, cellRange string) (*ShieldInformation, error) {
 	ctx := context.Background()
 
 	srv, err := sheets.NewService(ctx)
@@ -37,18 +37,16 @@ func GrabShieldInformation(shieldLabel string, spreadsheetId string, cellRange s
 	formattedValue := cellValue.FormattedValue
 	backgroundColor := cellValue.EffectiveFormat.BackgroundColor
 
-	if shieldLabel == "" {
-		labelAndValue := strings.Split(formattedValue, ":")
-		// Trim Spaces after split
-		for i := range labelAndValue {
-			labelAndValue[i] = strings.TrimSpace(labelAndValue[i])
-		}
-		if len(labelAndValue) > 1 {
-			shieldLabel = labelAndValue[0]
-			formattedValue = labelAndValue[1]
-		} else {
-			shieldLabel = "Value"
-		}
+	labelAndValue := strings.Split(formattedValue, ":")
+	// Trim Spaces after split
+	for i := range labelAndValue {
+		labelAndValue[i] = strings.TrimSpace(labelAndValue[i])
+	}
+
+	shieldLabel := "Value"
+	if len(labelAndValue) > 1 {
+		shieldLabel = labelAndValue[0]
+		formattedValue = labelAndValue[1]
 	}
 
 	shieldInformation := ShieldInformation{
