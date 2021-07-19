@@ -43,7 +43,7 @@ func GrabShieldInformation(spreadsheetId string, cellRange string) (*ShieldInfor
 		labelAndValue[i] = strings.TrimSpace(labelAndValue[i])
 	}
 
-	shieldLabel := "Value"
+	shieldLabel := ""
 	if len(labelAndValue) > 1 {
 		shieldLabel = labelAndValue[0]
 		formattedValue = labelAndValue[1]
