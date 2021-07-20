@@ -2,9 +2,10 @@ package main
 
 import (
 	"cell-shield-go/shieldinformation"
+	"embed"
 	"encoding/json"
 	"fmt"
-	"html"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -17,14 +18,17 @@ type ShieldsIoJson struct {
 	Color         string `json:"color"`
 }
 
-func main() {
+//go:embed static/*
+var content embed.FS
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		_, err := fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
-		if err != nil {
-			return
-		}
-	})
+func main() {
+	serverRoot, err := fs.Sub(content, "static")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	http.Handle("/", http.FileServer(http.FS(serverRoot)))
+
 	http.HandleFunc("/gs", func(w http.ResponseWriter, r *http.Request) {
 		spreadSheetId := r.URL.Query().Get("spreadSheetId")
 		if spreadSheetId == "" {
