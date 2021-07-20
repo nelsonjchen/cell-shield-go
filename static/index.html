@@ -17,30 +17,39 @@
         }
 
         input {
-            background-color:#FFF;
-            min-height:30px;
+            background-color: #FFF;
+            min-height: 30px;
             min-width: 100%;
             margin-top: 20px;
             margin-bottom: 20px;
         }
-        pre { overflow: auto; }
+
+        pre {
+            overflow: auto;
+        }
     </style>
 </head>
 
 <body>
 <div class="main">
     <h1>Cell Shield</h1>
+    <a href="https://github.com/nelsonjchen/cell-shield-go">https://github.com/nelsonjchen/cell-shield-go</a>
     <hr>
     <h2>Example</h2>
     <div class="example">
         <div>
             <h3>A public Google spreadsheet of some community effort</h3>
-            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vR__HjYLplN2BO1dNpKHjNhTA77GIQEv6P2AIoYwmtWFFtE12WShxzvjHKGaMafmdjadEV0CX9Rknfa/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vR__HjYLplN2BO1dNpKHjNhTA77GIQEv6P2AIoYwmtWFFtE12WShxzvjHKGaMafmdjadEV0CX9Rknfa/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"
+                    style="height: 200px"></iframe>
         </div>
         <div>
-            <h3>A Shield which you can embed on some README or web page</h3>
-            <img src="https://shields.io/endpoint?url=https%3A%2F%2Fcellshield.info%2Fgs%3FspreadSheetId%3D1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII%26cellRange%3DB2"
-                 alt="Rescues">
+            <h3>A <a href="https://shields.io">shields.io</a> badge which could be embed on some README, wiki, or web page</h3>
+            <div class="demo_readme">
+                <a href="https://docs.google.com/spreadsheets/d/1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII/edit#gid=0&range=B2">
+                    <img src="https://shields.io/endpoint?url=https%3A%2F%2Fcellshield.info%2Fgs%3FspreadSheetId%3D1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII%26cellRange%3DB2"
+                         alt="Rescues">
+                </a>
+            </div>
         </div>
     </div>
     <hr>
@@ -48,6 +57,13 @@
         <h2>Cell Shield Generator Tool</h2>
         <div id="app">
             <div>
+                <p>
+                    Make sure the spreadsheet you are viewing is publically viewable. Spreadsheets that are published
+                    but are not <em>"anyone on the internet with this link can view"</em> do not count.
+                </p>
+                <img src="/public_share.png" alt="Public Share">
+                <br>
+                <br>
                 <label for="spreadSheetURL">Public Google Spreadsheet URL</label>
                 <br>
                 <input id="spreadSheetURL" v-model="spreadSheetURL"
@@ -57,7 +73,8 @@
                 <br>
                 <input id="cellRange" v-model="cellRange"
                        placeholder="e.g. B2">
-                <label for="labelOverride">Label Override. Otherwise a label is generated from text value before colons(<code>:</code>) if available</label>
+                <label for="labelOverride">Label Override. Otherwise a label is generated from text value before colons(<code>:</code>)
+                    if available</label>
                 <br>
                 <input id="labelOverride" v-model="labelOverride"
                        placeholder="Empty means don't override">
@@ -65,30 +82,32 @@
             <div>
                 <h4>Preview</h4>
                 <a :href="linkToCell"><img :src="imageSrc"
-                     alt="Your Shield"></a>
+                                           alt="Your Shield"></a>
                 <h4>Image Source</h4>
                 <pre>
 {{ imageSrc }}
                 </pre>
                 <h4>Markdown</h4>
                 <pre>
-[![]({{imageSrc}})]({{linkToCell}})
+[![{{labelOverride}}]({{imageSrc}})]({{linkToCell}})
                 </pre>
-                <code></code>
+                <h4>HTML</h4>
+                <pre>
+{{ htmlSrc }}
+                </pre>
                 <h4>Need further customization?</h4>
                 <p>
-                    Visit <a href="https://shields.io/endpoint">https://shields.io/endpoint</a> for more such as logos
+                    Visit <a href="https://shields.io/endpoint">https://shields.io/endpoint</a> for more options such as
+                    logos
                     and other customizations.
                 </p>
                 <p>
-                    Here's the endpoint URL to use:
+                    Here's the raw endpoint URL to use with the shields.io endpoint creator:
                 </p>
-            <pre>
+                <pre>
 {{endpointURL}}
             </pre>
-
             </div>
-
         </div>
     </div>
     <hr>
@@ -116,16 +135,16 @@
                 }
                 return '1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII';
             },
-            cellRangeEffective: function() {
+            cellRangeEffective: function () {
                 return this.cellRange || 'B2'
             },
-            labelOverrideEffective: function() {
+            labelOverrideEffective: function () {
                 if (this.labelOverride) {
                     return this.labelOverride
                 }
                 return ''
             },
-            labelOverrideParameter: function() {
+            labelOverrideParameter: function () {
                 if (this.labelOverrideEffective) {
                     return `&label=${this.labelOverrideEffective}`
                 }
@@ -134,10 +153,13 @@
             endpointURL: function () {
                 return `https://cellshield.info/gs?spreadSheetId=${this.spreadsheetId}&cellRange=${this.cellRangeEffective}`
             },
-            imageSrc: function() {
+            imageSrc: function () {
                 return `https://shields.io/endpoint?url=${encodeURIComponent(this.endpointURL)}${this.labelOverrideParameter}`
             },
-            linkToCell: function() {
+            htmlSrc: function () {
+                return `<a href="${this.linkToCell}"><img src="${this.imageSrc}" alt="${this.labelOverrideEffective}"></a>`
+            },
+            linkToCell: function () {
                 return `${this.spreadSheetEffective}&range=${this.cellRangeEffective}`
             }
         }
