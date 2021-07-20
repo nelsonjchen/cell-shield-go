@@ -135,6 +135,9 @@
                 }
                 return '1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII';
             },
+            cleanSpreadsheetURL: function () {
+                return `https://docs.google.com/spreadsheets/d/${this.spreadsheetId}/edit#gid=0`
+            },
             cellRangeEffective: function () {
                 return this.cellRange || 'B2'
             },
@@ -160,7 +163,7 @@
                 return `<a href="${this.linkToCell}"><img src="${this.imageSrc}" alt="${this.labelOverrideEffective}"></a>`
             },
             linkToCell: function () {
-                return `${this.spreadSheetEffective}&range=${this.cellRangeEffective}`
+                return `${this.cleanSpreadsheetURL}&range=${this.cellRangeEffective}`
             }
         }
     })
