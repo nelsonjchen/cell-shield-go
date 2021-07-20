@@ -2,27 +2,109 @@
 <html lang="en">
 <head>
     <title>Cell Shield</title>
+    <link rel="stylesheet" href="/styles.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
 
 <body>
-<h1>Cell Shield</h1>
-<div>
-    <h2>Check this out!</h2>
-    <div>
-        <h3>The Spreadsheet</h3>
-        <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vR__HjYLplN2BO1dNpKHjNhTA77GIQEv6P2AIoYwmtWFFtE12WShxzvjHKGaMafmdjadEV0CX9Rknfa/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+<div class="main">
+    <h1>Cell Shield</h1>
+    <hr>
+    <h2>Example</h2>
+    <div class="example">
+        <div>
+            <h3>A public Google spreadsheet of some community effort</h3>
+            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vR__HjYLplN2BO1dNpKHjNhTA77GIQEv6P2AIoYwmtWFFtE12WShxzvjHKGaMafmdjadEV0CX9Rknfa/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+        </div>
+        <div>
+            <h3>A Shield which you can embed on some README or web page</h3>
+            <img src="https://shields.io/endpoint?url=https%3A%2F%2Fcellshield.info%2Fgs%3FspreadSheetId%3D1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII%26cellRange%3DB2"
+                 alt="Rescues">
+        </div>
     </div>
+    <hr>
     <div>
-        <h3>The Shield</h3>
-        <img src="https://shields.io/endpoint?url=https%3A%2F%2Fcellshield.info%2Fgs%3FspreadSheetId%3D1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII%26cellRange%3DB2" alt="Rescues">
-    </div>
-    <h2>Generator</h2>
+        <h2>Generator</h2>
+        <p>
+            This generator will make a link to a generator where you can further customize and adapt the generated
+            shield.
+        </p>
+        <div id="app">
+            <div>
+                <label for="spreadSheetURL">Public Google Spreadsheet URL</label>
+                <br>
+                <input id="spreadSheetURL" v-model="spreadSheetURL"
+                       placeholder="https://docs.google.com/spreadsheets/d/1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII/edit#gid=0">
+                <br>
+                <label for="cellRange">Cell Location (Named Ranges)</label>
+                <br>
+                <input id="cellRange" v-model="cellRange"
+                       placeholder="B2">
+            </div>
+            <div>
+                <h3>Preview</h3>
+                <img :src="imageSrc"
+                     alt="Your Shield">
+                <h4>Image Source</h4>
+                <p>
+                    {{ imageSrc }}
+                </p>
+                <h4>Markdown</h4>
+                <code>[![]({{imageSrc}})]({{linkToCell}})</code>
+                <h4>Need further customization?</h4>
+                <p>
+                    Visit <a href="https://shields.io/endpoint">https://shields.io/endpoint</a>.
+                </p>
+                <p>
+                    Here's the endpoint URL to use: <code>{{endpointURL}}</code>
+                </p>
+            </div>
 
+        </div>
+    </div>
+    <hr>
+    <h2>Project</h2>
+    <a href="https://github.com/nelsonjchen/cell-shield-go">https://github.com/nelsonjchen/cell-shield-go</a>
 </div>
+
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            spreadSheetURL: '',
+            cellRange: '',
+        },
+        computed: {
+            spreadSheetEffective: function () {
+                return this.spreadSheetURL || 'https://docs.google.com/spreadsheets/d/1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII/edit#gid=0'
+            },
+            spreadsheetId: function () {
+                // https://docs.google.com/spreadsheets/d/1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII/
+                const matches = this.spreadSheetURL.match(/https:\/\/docs\.google\.com\/spreadsheets\/d\/(.+)\//)
+                if (matches) {
+                    return matches[1]
+                }
+                return '1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII';
+            },
+            cellRangeEffective: function() {
+                return this.cellRange || 'B2'
+            },
+            endpointURL: function () {
+                return `https://cellshield.info/gs?spreadSheetId=${this.spreadsheetId}&cellRange=${this.cellRangeEffective}`
+            },
+            imageSrc: function() {
+                return `https://shields.io/endpoint?url=${encodeURIComponent(this.endpointURL)}`
+            },
+            linkToCell: function() {
+                return `${this.spreadSheetEffective}&range=${this.cellRangeEffective}`
+            }
+        }
+    })
+</script>
 
 </body>
 
