@@ -13,5 +13,8 @@ A label is suggested if the cell has a `:`, otherwise its up to the user to set 
 
 Please visit https://cellshield.info for a generator and information.
 
+## Credits
+
+🧮 Favicon by Twemoji project.
 
 [shio]: https://shields.io/
