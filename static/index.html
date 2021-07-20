@@ -102,6 +102,7 @@
         data: {
             spreadSheetURL: '',
             cellRange: '',
+            labelOverride: '',
         },
         computed: {
             spreadSheetEffective: function () {
@@ -118,11 +119,23 @@
             cellRangeEffective: function() {
                 return this.cellRange || 'B2'
             },
+            labelOverrideEffective: function() {
+                if (this.labelOverride) {
+                    return this.labelOverride
+                }
+                return ''
+            },
+            labelOverrideParameter: function() {
+                if (this.labelOverrideEffective) {
+                    return `&label=${this.labelOverrideEffective}`
+                }
+                return ''
+            },
             endpointURL: function () {
                 return `https://cellshield.info/gs?spreadSheetId=${this.spreadsheetId}&cellRange=${this.cellRangeEffective}`
             },
             imageSrc: function() {
-                return `https://shields.io/endpoint?url=${encodeURIComponent(this.endpointURL)}`
+                return `https://shields.io/endpoint?url=${encodeURIComponent(this.endpointURL)}${this.labelOverrideParameter}`
             },
             linkToCell: function() {
                 return `${this.spreadSheetEffective}&range=${this.cellRangeEffective}`
