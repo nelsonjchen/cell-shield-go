@@ -5,10 +5,12 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
+	"github.com/ReneKroon/ttlcache/v2"
 	"io/fs"
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 type ShieldsIoJson struct {
@@ -23,6 +25,12 @@ var content embed.FS
 
 func main() {
 	serverRoot, err := fs.Sub(content, "static")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var cache ttlcache.SimpleCache = ttlcache.NewCache()
+	err = cache.SetTTL(time.Duration(30 * time.Second))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,22 +67,36 @@ func main() {
 			return
 		}
 
-		shieldInformation, shErr := shieldinformation.GrabShieldInformation(spreadSheetId, cellRange)
-		if shErr != nil {
-			err := json.NewEncoder(w).Encode(ShieldsIoJson{
-				SchemaVersion: 1,
-				Label:         "Error",
-				Message:       fmt.Sprintf("Unable to retrieve shield information | %s", shErr),
-				Color:         "red",
-			})
-			if err != nil {
+		cacheKey := "Sheet " + spreadSheetId + " | Range " + cellRange
+		shieldInformationRetrieve, err := cache.Get(cacheKey)
+		if err == ttlcache.ErrNotFound {
+			log.Println("Cache was not hit for", cacheKey)
+			freshShieldInformation, shErr := shieldinformation.GrabShieldInformation(spreadSheetId, cellRange)
+			shieldInformationRetrieve = freshShieldInformation
+			if shErr != nil {
+				err := json.NewEncoder(w).Encode(ShieldsIoJson{
+					SchemaVersion: 1,
+					Label:         "Error",
+					Message:       fmt.Sprintf("Unable to retrieve shield information | %s", shErr),
+					Color:         "red",
+				})
+				if err != nil {
+					return
+				}
+				log.Println("Unable to retrieve shield information for", r.URL.RawQuery, shErr)
 				return
 			}
-			log.Println("Unable to retrieve shield information for", r.URL.RawQuery, shErr)
-			return
+			chErr := cache.Set(cacheKey, shieldInformationRetrieve)
+			if chErr != nil {
+				// If we can't set the cache, we don't care oh well.
+				log.Println("Unable to set", cacheKey)
+			}
+		} else {
+			log.Println("Cache was hit for", cacheKey)
 		}
+		shieldInformation := shieldInformationRetrieve.(*shieldinformation.ShieldInformation)
 
-		err := json.NewEncoder(w).Encode(ShieldsIoJson{
+		err = json.NewEncoder(w).Encode(ShieldsIoJson{
 			SchemaVersion: 1,
 			Label:         shieldInformation.ShieldLabel,
 			Message:       shieldInformation.ShieldMessage,
