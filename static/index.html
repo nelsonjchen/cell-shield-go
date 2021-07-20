@@ -8,6 +8,23 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <style>
+        html {
+            max-width: 38rem;
+            padding: 2rem;
+            margin: auto;
+            overflow: scroll;
+        }
+
+        input {
+            background-color:#FFF;
+            min-height:30px;
+            min-width: 100%;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        pre { overflow: auto; }
+    </style>
 </head>
 
 <body>
@@ -28,40 +45,48 @@
     </div>
     <hr>
     <div>
-        <h2>Generator</h2>
-        <p>
-            This generator will make a link to a generator where you can further customize and adapt the generated
-            shield.
-        </p>
+        <h2>Cell Shield Generator Tool</h2>
         <div id="app">
             <div>
                 <label for="spreadSheetURL">Public Google Spreadsheet URL</label>
                 <br>
                 <input id="spreadSheetURL" v-model="spreadSheetURL"
-                       placeholder="https://docs.google.com/spreadsheets/d/1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII/edit#gid=0">
+                       placeholder="Paste a spreadsheet URL here e.g. https://docs.google.com/spreadsheets/d/1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII/edit#gid=0">
                 <br>
-                <label for="cellRange">Cell Location (Named Ranges)</label>
+                <label for="cellRange">Cell Location (Named Ranges OK)</label>
                 <br>
                 <input id="cellRange" v-model="cellRange"
-                       placeholder="B2">
+                       placeholder="e.g. B2">
+                <label for="labelOverride">Label Override. Otherwise a label is generated from text value before colons(<code>:</code>) if available</label>
+                <br>
+                <input id="labelOverride" v-model="labelOverride"
+                       placeholder="Empty means don't override">
             </div>
             <div>
-                <h3>Preview</h3>
-                <img :src="imageSrc"
-                     alt="Your Shield">
+                <h4>Preview</h4>
+                <a :href="linkToCell"><img :src="imageSrc"
+                     alt="Your Shield"></a>
                 <h4>Image Source</h4>
-                <p>
-                    {{ imageSrc }}
-                </p>
+                <pre>
+{{ imageSrc }}
+                </pre>
                 <h4>Markdown</h4>
-                <code>[![]({{imageSrc}})]({{linkToCell}})</code>
+                <pre>
+[![]({{imageSrc}})]({{linkToCell}})
+                </pre>
+                <code></code>
                 <h4>Need further customization?</h4>
                 <p>
-                    Visit <a href="https://shields.io/endpoint">https://shields.io/endpoint</a>.
+                    Visit <a href="https://shields.io/endpoint">https://shields.io/endpoint</a> for more such as logos
+                    and other customizations.
                 </p>
                 <p>
-                    Here's the endpoint URL to use: <code>{{endpointURL}}</code>
+                    Here's the endpoint URL to use:
                 </p>
+            <pre>
+{{endpointURL}}
+            </pre>
+
             </div>
 
         </div>
