@@ -146,7 +146,7 @@
             },
             labelOverrideParameter: function () {
                 if (this.labelOverrideEffective) {
-                    return `&label=${this.labelOverrideEffective}`
+                    return `&label=${encodeURIComponent(this.labelOverrideEffective)}`
                 }
                 return ''
             },
