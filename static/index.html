@@ -102,7 +102,7 @@
                 </pre>
                 <h4>Markdown</h4>
                 <pre>
-[![{{labelOverride}}]({{imageSrc}})]({{linkToCell}})
+{{ markdownSrc }}
                 </pre>
                 <h4>HTML</h4>
                 <pre>
@@ -118,8 +118,8 @@
                     Here's the raw endpoint URL to use with the shields.io endpoint creator:
                 </p>
                 <pre>
-{{endpointURL}}
-            </pre>
+{{endpointURLSrc}}
+                </pre>
             </div>
         </div>
     </div>
@@ -166,18 +166,24 @@
                 }
                 return ''
             },
+            linkToCell: function () {
+                return `${this.cleanSpreadsheetURL}&range=${this.cellRangeEffective}`
+            },
             endpointURL: function () {
                 return `https://cellshield.info/gs?spreadSheetId=${this.spreadsheetId}&cellRange=${this.cellRangeEffective}`
             },
             imageSrc: function () {
                 return `https://shields.io/endpoint?url=${encodeURIComponent(this.endpointURL)}${this.labelOverrideParameter}`
             },
+            markdownSrc: function() {
+                return `[![${this.labelOverride}](${this.imageSrc})](${this.linkToCell})`
+            },
             htmlSrc: function () {
                 return `<a href="${this.linkToCell}"><img src="${this.imageSrc}" alt="${this.labelOverrideEffective}"></a>`
             },
-            linkToCell: function () {
-                return `${this.cleanSpreadsheetURL}&range=${this.cellRangeEffective}`
-            }
+            endpointURLSrc: function () {
+                return this.endpointURL
+            },
         }
     })
 </script>
