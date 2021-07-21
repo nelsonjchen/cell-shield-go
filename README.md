@@ -7,7 +7,7 @@ a cell from a public Google Spreadsheet.
 
 The value of the cell and the background color will come through.
 
-A label is suggested if the cell has a `:`, otherwise its up to the user to set it.
+A label is suggested if the cell has a `:`, otherwise it is up to the user to set it.
 
 ## Usage
 
