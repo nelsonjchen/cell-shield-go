@@ -99,14 +99,23 @@
                 <pre>
 {{ imageSrc }}
                 </pre>
+                <button @click="copyToClipboard(imageSrc)">
+                    Copy to Clipboard
+                </button>
                 <h4>Markdown</h4>
                 <pre>
 {{ markdownSrc }}
                 </pre>
+                <button @click="copyToClipboard(markdownSrc)">
+                    Copy to Clipboard
+                </button>
                 <h4>HTML</h4>
                 <pre>
 {{ htmlSrc }}
                 </pre>
+                <button @click="copyToClipboard(htmlSrc)">
+                    Copy to Clipboard
+                </button>
                 <h4>Need further customization?</h4>
                 <p>
                     Visit <a href="https://shields.io/endpoint">https://shields.io/endpoint</a> for more options such as
@@ -119,6 +128,9 @@
                 <pre>
 {{endpointURLSrc}}
                 </pre>
+                <button @click="copyToClipboard(endpointURLSrc)">
+                    Copy to Clipboard
+                </button>
             </div>
         </div>
     </div>
@@ -134,6 +146,17 @@
             spreadSheetURL: '',
             cellRange: '',
             labelOverride: '',
+        },
+        methods: {
+            copyToClipboard: function (text) {
+                const clipboardData =
+                    event.clipboardData ||
+                    window.clipboardData ||
+                    event.originalEvent?.clipboardData ||
+                    navigator.clipboard;
+
+                clipboardData.writeText(text);
+            }
         },
         computed: {
             spreadSheetEffective: function () {
