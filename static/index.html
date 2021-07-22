@@ -54,7 +54,7 @@
                     style="height: 200px"></iframe>
         </div>
         <div>
-            <h3>A <a href="https://shields.io">shields.io</a> badge which could be embed on some README, wiki, or web page that pulls data from the cell B2 of that spreadsheet</h3>
+            <h3>A <a href="https://shields.io">shields.io</a> badge which could be embed on some README, wiki, forum post, or web page that pulls data from the cell B2 of that spreadsheet</h3>
             <div class="demo_readme">
                 <a href="https://docs.google.com/spreadsheets/d/1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII/edit#gid=0&range=B2">
                     <img src="https://shields.io/endpoint?url=https%3A%2F%2Fcellshield.info%2Fgs%3FspreadSheetId%3D1gVDfNMIub0TxFsvRTa6igaPvQn2j0AHokxDyB0wDWII%26cellRange%3DB2"
@@ -113,6 +113,13 @@
 {{ htmlSrc }}
                 </pre>
                 <button @click="copyToClipboard(htmlSrc)">
+                    Copy to Clipboard
+                </button>
+                <h4>BBCode</h4>
+                <pre>
+{{ bbCodeSrc }}
+                </pre>
+                <button @click="copyToClipboard(bbCodeSrc)">
                     Copy to Clipboard
                 </button>
                 <h4>Need further customization?</h4>
@@ -201,6 +208,9 @@
             },
             htmlSrc: function () {
                 return `<a href="${this.linkToCell}"><img src="${this.imageSrc}" alt="${this.labelOverrideEffective}"></a>`
+            },
+            bbCodeSrc: function () {
+                return `[url=${this.linkToCell}][img]${this.imageSrc}[/img][/url]`
             },
             endpointURLSrc: function () {
                 return this.endpointURL
