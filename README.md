@@ -5,9 +5,11 @@
 Cell Shield is a service that allows backing a [shields.io][shio] badge with
 a cell from a public Google Spreadsheet.
 
-The value of the cell and the background color will come through.
+The value of the cell and the background color will come through. 
 
 A label is suggested if the cell has a `:`, otherwise it is up to the user to set it.
+
+You can override the color(s) and label with https://shields.io/endpoint and have a few more options.
 
 ## Usage
 
