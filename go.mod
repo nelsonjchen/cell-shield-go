@@ -4,5 +4,5 @@ go 1.16
 
 require (
 	github.com/ReneKroon/ttlcache/v2 v2.7.0
-	google.golang.org/api v0.50.0
+	google.golang.org/api v0.97.0
 )
